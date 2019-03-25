@@ -23,7 +23,7 @@ if (!window.yzRefreshImages) {
         function refreshBackgroundImages(elm) {
             var bg = getComputedStyle(elm)["backgroundImage"];
             if (bg != "none") {
-            elm.style.backgroundImage = bg.replace(/url\('?"?(.+?(?:\(r=[a-z0-9]{4}\))?)"?'?\)/g,
+            elm.style.backgroundImage = bg.replace(/url\('?"?(.+?(?:\(r=[a-z0-9]{1,4}\))?)"?'?\)/g,
                 (match, p) => { return "url(\"" + setNfopt(p) + "\")" });
             }
             /*
