@@ -47,7 +47,7 @@ if (!window.yzRefreshImages) {
                     /* currentSrc seems to contain the full path. 
                     Let's find the last element in the path since that's guaranteed to exist within the srcset
                     Potential BUG: Doing this stops us detecting data: URLs */
-                    new RegExp(currentSrc.substr(currentSrc.lastIndexOf("/") + 1).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&') + "(\??&~nfopt\(r=[a-f0-9]{1,4}\))?", "g"),
+                    new RegExp(currentSrc.substr(currentSrc.lastIndexOf("/") + 1).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&') + "(\\??&~nfopt\\(r=[a-f0-9]{1,4}\\))?", "g"),
                     (match) => {
                         return setNfopt(match)
                     }
