@@ -9,13 +9,13 @@ if (!window.yzRefreshImages) {
 
         var nfoptRegex = /(?:\?)?&~nfopt\(([^\/]+)\)$/;
         var queryReqex = /(\?.*)?$/;
-        var nfparam = "&~nfopt(r=" + getRandom() + ")";
 
         function clearNfopt(url) {
             return url.replace(nfoptRegex, '');
         }
 
         function setNfopt(url) {
+            var nfparam = "&~nfopt(r=" + getRandom() + ")";
             if (/^data:/.test(url)) return url; /* Data URLs don't like query strings */
             return clearNfopt(url).replace(queryReqex, function (_all, start) {
                 return (start || '?') + nfparam;
