@@ -1,5 +1,7 @@
 if (!window.yzRefreshImages) {
-    window.yzRefreshImages = (function () {
+    window.yzRefreshImages = (function (options) {
+
+        var options = options || {};
 
         function getRandom() {
             return Math.floor(Math.random() * 0xffff).toString(16);
@@ -48,7 +50,7 @@ if (!window.yzRefreshImages) {
             }
         }
 
-        function refreshImages(node) {
+        function refreshImages(node, options) {
             for (element of node.querySelectorAll('*')) {
 
                 refreshBackgroundImages(element);
@@ -74,9 +76,13 @@ if (!window.yzRefreshImages) {
                     refreshImages(element.shadowRoot);
                 }
 
+                if (element.contentDocument) { /* same-origin iframes */
+                    refreshImages(element.contentDocument);
+                }
+
                 /* TODO: warn about iframes, refresh SVG elements */
             }
         }
-        refreshImages(document);
+        refreshImages(document, options);
     })
 }
