@@ -1,7 +1,7 @@
 if (!window.yzRefreshImages) {
     window.yzRefreshImages = (function (options) {
 
-        var options = options || {};
+        var options = options || {refreshAll: false};
 
         function getRandom() {
             return Math.floor(Math.random() * 0xffff).toString(16);
@@ -23,7 +23,7 @@ if (!window.yzRefreshImages) {
         }
 
         function refreshBackgroundImages(elm) {
-            var bg = getComputedStyle(elm)["backgroundImage"];
+            var bg = getComputedStyle(elm).backgroundImage;
             if (bg != "none") {
                 elm.style.backgroundImage = bg.replace(/url\('?"?(.+?(?:\(r=[a-z0-9]{1,4}\))?)"?'?\)/g,
                     (match, p) => {
@@ -57,6 +57,11 @@ if (!window.yzRefreshImages) {
 
         function refreshImages(node, options) {
             for (element of node.querySelectorAll('*')) {
+
+                if (options && options.x && options.y) {
+                    rect = element.getBoundingClientRect();
+                    if (options.x < rect.left || rect.right < options.x || options.y < rect.top || rect.bottom < options.y) continue;
+                }
 
                 refreshBackgroundImages(element);
 
@@ -94,6 +99,38 @@ if (!window.yzRefreshImages) {
                 /* TODO: warn about iframes, refresh SVG elements */
             }
         }
-        refreshImages(document, options);
+
+        function clickHandler(e) {
+            e.preventDefault();
+            refreshImages(document, {x: e.x, y:e.y});
+        }
+
+        function escHandler(e) {
+            if (e.which === 27) {
+                document.removeEventListener("click", clickHandler, true);
+                document.removeEventListener("keydown", escHandler, true);
+                document.removeEventListener("mouseover", handleMouseOver, true);
+                document.removeEventListener("mouseout", handleMouseOut, true);
+                last.style.outline = 'none';
+            }
+        }
+
+        var last;
+
+        function handleMouseOver(e) {
+            var element = e.target;
+            element.style.outline = '2px solid #f00';
+            last = element;
+        }
+
+        function handleMouseOut(e) {e.target.style.outline = '';}
+
+        if (options.refreshAll) refreshImages(document)
+        else {
+            document.addEventListener("click", clickHandler, true);
+            document.addEventListener("keydown", escHandler, true);
+            document.addEventListener("mouseover", handleMouseOver, true);
+		    document.addEventListener("mouseout", handleMouseOut, true);
+        }
     })
 }
