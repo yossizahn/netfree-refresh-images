@@ -25,8 +25,10 @@ if (!window.yzRefreshImages) {
         function refreshBackgroundImages(elm) {
             var bg = getComputedStyle(elm)["backgroundImage"];
             if (bg != "none") {
-            elm.style.backgroundImage = bg.replace(/url\('?"?(.+?(?:\(r=[a-z0-9]{1,4}\))?)"?'?\)/g,
-                (match, p) => { return "url(\"" + setNfopt(p) + "\")" });
+                elm.style.backgroundImage = bg.replace(/url\('?"?(.+?(?:\(r=[a-z0-9]{1,4}\))?)"?'?\)/g,
+                    (match, p) => {
+                        return "url(\"" + setNfopt(p) + "\")"
+                    });
             }
             /*
             TODO: How can I set backgound-image of pseudo elements via JS? 
@@ -35,7 +37,7 @@ if (!window.yzRefreshImages) {
             */
         }
 
-        function refreshSrcs(element, currentSrc) { 
+        function refreshSrcs(element, currentSrc) {
             /*we pass in currentSrc, to allow  easy finding of the relevant src within srcset.
             It must be a seperate arg because it isn't available in <picture> elements.
             Another option would be, to parse "srcset" and refresh all images within */
@@ -45,7 +47,10 @@ if (!window.yzRefreshImages) {
                     /* currentSrc seems to contain the full path. 
                     Let's find the last element in the path since that's guaranteed to exist within the srcset
                     Potential BUG: Doing this stops us detecting data: URLs */
-                    currentSrc.substr(currentSrc.lastIndexOf("/") + 1), (match) => { return setNfopt(match) }
+                    new RegExp(currentSrc.substr(currentSrc.lastIndexOf("/") + 1).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&') + "(\??&~nfopt\(r=[a-f0-9]{1,4}\))?", "g"),
+                    (match) => {
+                        return setNfopt(match)
+                    }
                 )
             }
         }
@@ -55,28 +60,34 @@ if (!window.yzRefreshImages) {
 
                 refreshBackgroundImages(element);
 
-                if (element instanceof HTMLImageElement) { /* <img> elements */
+                if (element instanceof HTMLImageElement) {
+                    /* <img> elements */
                     refreshSrcs(element, element.currentSrc);
                 }
 
-                if (element instanceof HTMLPictureElement) { /* <picture> elements*/
+                if (element instanceof HTMLPictureElement) {
+                    /* <picture> elements*/
                     var cs;
-                    for (subElement of element.children) { /* find currentSrc */
+                    for (subElement of element.children) {
+                        /* find currentSrc */
                         if (subElement instanceof HTMLImageElement) {
                             cs = subElement.currentSrc;
                         }
                     }
-                    for (subElement of element.children) { /* find and update <source> tags */
+                    for (subElement of element.children) {
+                        /* find and update <source> tags */
                         if (subElement instanceof HTMLSourceElement) {
                             refreshSrcs(subElement, cs);
                         }
                     }
                 }
-                if (element.shadowRoot) { /*recurse into shadow root*/
+                if (element.shadowRoot) {
+                    /*recurse into shadow root*/
                     refreshImages(element.shadowRoot);
                 }
 
-                if (element.contentDocument) { /* same-origin iframes */
+                if (element.contentDocument) {
+                    /* same-origin iframes */
                     refreshImages(element.contentDocument);
                 }
 
