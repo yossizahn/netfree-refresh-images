@@ -126,7 +126,7 @@ if (!window.yzRefreshImages) {
                 document.removeEventListener("mouseout", handleMouseOut, true);
                 last.style.outline = 'none';
                 options.refreshAll = true;
-                refreshImages(document);
+                refreshImages(document, options);
             }
         }
 
