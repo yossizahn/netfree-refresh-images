@@ -1,7 +1,9 @@
 if (!window.yzRefreshImages) {
     window.yzRefreshImages = (function (options) {
 
-        var options = options || {refreshAll: false};
+        var options = options || {
+            refreshAll: false
+        };
 
         function getRandom() {
             return Math.floor(Math.random() * 0xffff).toString(16);
@@ -102,7 +104,10 @@ if (!window.yzRefreshImages) {
 
         function clickHandler(e) {
             e.preventDefault();
-            refreshImages(document, {x: e.x, y:e.y});
+            refreshImages(document, {
+                x: e.x,
+                y: e.y
+            });
         }
 
         function escHandler(e) {
@@ -123,14 +128,16 @@ if (!window.yzRefreshImages) {
             last = element;
         }
 
-        function handleMouseOut(e) {e.target.style.outline = '';}
+        function handleMouseOut(e) {
+            e.target.style.outline = '';
+        }
 
         if (options.refreshAll) refreshImages(document)
         else {
             document.addEventListener("click", clickHandler, true);
             document.addEventListener("keydown", escHandler, true);
             document.addEventListener("mouseover", handleMouseOver, true);
-		    document.addEventListener("mouseout", handleMouseOut, true);
+            document.addEventListener("mouseout", handleMouseOut, true);
         }
     })
 }
