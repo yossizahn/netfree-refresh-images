@@ -118,6 +118,16 @@ if (!window.yzRefreshImages) {
                 document.removeEventListener("mouseout", handleMouseOut, true);
                 last.style.outline = 'none';
             }
+            else if (e.which === 65)
+            {
+                document.removeEventListener("click", clickHandler, true);
+                document.removeEventListener("keydown", escHandler, true);
+                document.removeEventListener("mouseover", handleMouseOver, true);
+                document.removeEventListener("mouseout", handleMouseOut, true);
+                last.style.outline = 'none';
+                options.refreshAll = true;
+                refreshImages(document);
+            }
         }
 
         var last;
