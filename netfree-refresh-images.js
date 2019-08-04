@@ -1,7 +1,7 @@
 if (!window.yzRefreshImages) {
     window.yzRefreshImages = (function (options) {
 
-        var options = options || {
+        options = options || {
             refreshAll: false
         };
 
@@ -9,7 +9,7 @@ if (!window.yzRefreshImages) {
             return Math.floor(Math.random() * 0xffff).toString(16);
         }
 
-        var nfoptRegex = /(?:\?)?&~nfopt\(([^\/]+)\)$/;
+        var nfoptRegex = /(?:\?)?&~nfopt\(([^/]+)\)$/;
         var queryReqex = /(\?.*)?$/;
 
         function clearNfopt(url) {
@@ -44,11 +44,12 @@ if (!window.yzRefreshImages) {
             It must be a seperate arg because it isn't available in <picture> elements.
             Another option would be, to parse "srcset" and refresh all images within */
             if (element.src) element.src = setNfopt(element.src);
-            if (element.srcset) {
+            if (element.srcset && currentSrc /* currentSrc can be empty string while image is loading */) {
                 element.srcset = element.srcset.replace(
                     /* currentSrc seems to contain the full path. 
                     Let's find the last element in the path since that's guaranteed to exist within the srcset
                     Potential BUG: Doing this stops us detecting data: URLs */
+                    //need to use a regex since the replacement string is created dynamically. regex is also created dynamically, need to escape all special chars in regex
                     new RegExp(currentSrc.substr(currentSrc.lastIndexOf("/") + 1).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&') + "(\\??&~nfopt\\(r=[a-f0-9]{1,4}\\))?", "g"),
                     (match) => {
                         return setNfopt(match)
@@ -75,7 +76,7 @@ if (!window.yzRefreshImages) {
                 if (element instanceof HTMLPictureElement) {
                     /* <picture> elements*/
                     var cs;
-                    for (subElement of element.children) {
+                    for (var subElement of element.children) {
                         /* find currentSrc */
                         if (subElement instanceof HTMLImageElement) {
                             cs = subElement.currentSrc;

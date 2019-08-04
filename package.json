@@ -1,0 +1,19 @@
+{
+  "name": "netfree-refresh-images",
+  "version": "0.0.1",
+  "description": "refresh images in netfree",
+  "main": "netfree-refresh-images.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yossizahn/netfree-refresh-images.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yossizahn/netfree-refresh-images/issues"
+  },
+  "homepage": "https://github.com/yossizahn/netfree-refresh-images#readme"
+}
